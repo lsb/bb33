@@ -14,19 +14,19 @@
 -- A(0, 6k+2, c) -> HALT(16k + 2c + 7)
 
 maxTick :: Int
-maxTick = 10000
+maxTick = 1
 
-aFn :: Integer -> Integer -> Integer -> Int -> [(Integer, Integer, Integer)]
+aFn :: Integer -> Integer -> Integer -> Int -> [[Integer]]
 aFn a b c tick = let (k, krem) = divMod b 6 in
-    if tick >= maxTick then ((a,b,c) : (aFn a b c 0)) else (aFnK a k krem c tick)
+    if tick >= maxTick then ([a,b,c] : (aFn a b c 0)) else (aFnK a k krem c tick)
 
-aFnK :: Integer -> Integer -> Integer -> Integer -> Int -> [(Integer, Integer, Integer)]
+aFnK :: Integer -> Integer -> Integer -> Integer -> Int -> [[Integer]]
 aFnK a k 0 c tick = aFn (a + 0) (8 * k + c - 1) 2 (tick+1)
 aFnK a k 1 c tick = aFn (a + 1) (8 * k + c - 1) 3 (tick+1)
-aFnK 0 k 2 c tick = [(16 * k + 2 * c + 7, 0, 0)]
+aFnK 0 k 2 c tick = [[16 * k + 2 * c + 7]]
 aFnK a k 2 c tick = aFn (a - 1) (8 * k + c + 3) 2 (tick+1)
 aFnK a k 3 c tick = aFn (a + 0) (8 * k + c + 1) 5 (tick+1)
 aFnK a k 4 c tick = aFn (a + 1) (8 * k + c + 3) 2 (tick+1)
 aFnK a k 5 c tick = aFn (a + 0) (8 * k + c + 5) 3 (tick+1)
 
-main = mapM_ (\ ((a,b,c), tick) -> print (a, tick)) (zip (aFn 2 1 2 0) [1..])
+main = mapM_ (\ ((a:_), tick) -> print [a, tick]) (zip (aFn 2 1 2 0) [1..])
